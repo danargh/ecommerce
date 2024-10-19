@@ -4,11 +4,12 @@ import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerBehindProxyGuard } from './common/guards/throttler-behind-proxy.guard';
+import { UsersModule } from './users/users.module';
 
 @Module({
    imports: [
       ConfigModule.forRoot({
-         envFilePath: '.env.development.local',
+         envFilePath: '.env',
          isGlobal: true,
       }),
       ThrottlerModule.forRoot([
@@ -17,6 +18,7 @@ import { ThrottlerBehindProxyGuard } from './common/guards/throttler-behind-prox
             limit: 10,
          },
       ]),
+      UsersModule,
    ],
    controllers: [AppController],
    providers: [

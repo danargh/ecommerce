@@ -5,10 +5,78 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+   provider = "postgresql"
+   url      = env("DATABASE_URL")
+}
+
+model User {
+   id        Int       @id @default(autoincrement())
+   email     String    @unique
+   password  String
+   role      Role      @default(USER)
+   createdAt DateTime  @default(now())
+   updatedAt DateTime  @updatedAt
+   sessions  Session[]
+   orders    Order[] // Relation with Order
+   products  Product[] // For admin users who can manage products
+}
+
+model Session {
+   id           Int      @id @default(autoincrement())
+   refreshToken String   @unique
+   userId       Int
+   user         User     @relation(fields: [userId], references: [id])
+   createdAt    DateTime @default(now())
+   updatedAt    DateTime @updatedAt
+}
+
+model Product {
+   id          Int       @id @default(autoincrement())
+   name        String
+   description String
+   price       Float
+   stock       Int
+   createdAt   DateTime  @default(now())
+   updatedAt   DateTime  @updatedAt
+   orders      Order[]
+   createdBy   User      @relation(fields: [createdById], references: [id])
+   createdById Int
+   category    Category? @relation(fields: [categoryId], references: [id])
+   categoryId  Int?
+}
+
+model Order {
+   id         Int         @id @default(autoincrement())
+   quantity   Int
+   totalPrice Float
+   status     OrderStatus @default(PENDING)
+   createdAt  DateTime    @default(now())
+   updatedAt  DateTime    @updatedAt
+   user       User        @relation(fields: [userId], references: [id])
+   userId     Int
+   product    Product     @relation(fields: [productId], references: [id])
+   productId  Int
+}
+
+model Category {
+   id          Int       @id @default(autoincrement())
+   name        String
+   description String
+   products    Product[] // Relasi satu kategori memiliki banyak produk
+}
+
+enum Role {
+   USER
+   ADMIN
+}
+
+enum OrderStatus {
+   PENDING
+   SHIPPED
+   DELIVERED
+   CANCELED
 }
