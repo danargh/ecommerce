@@ -5,6 +5,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerBehindProxyGuard } from './common/guards/throttler-behind-proxy.guard';
 import { UsersModule } from './users/users.module';
+import { CoreModule } from './core/core.module';
 
 @Module({
    imports: [
@@ -18,6 +19,7 @@ import { UsersModule } from './users/users.module';
             limit: 10,
          },
       ]),
+      CoreModule,
       UsersModule,
    ],
    controllers: [AppController],
