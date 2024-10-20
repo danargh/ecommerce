@@ -11,3 +11,11 @@
 5. Throttler (nest) => rate limiter
 6. Prisma => database ORM
 7.
+
+## Frontend
+
+### Requirement libraries
+
+1. Shadcn => ui component
+2. Zustand => global client state management
+3. Tanstack Query => server state management & data fetching
