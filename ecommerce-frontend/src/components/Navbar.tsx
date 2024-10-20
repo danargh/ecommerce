@@ -26,20 +26,20 @@ interface RouteProps {
 
 const routeList: RouteProps[] = [
    {
-      href: "#features",
-      label: "Features",
+      href: "#home",
+      label: "Home",
    },
    {
-      href: "#testimonials",
-      label: "Testimonials",
+      href: "#products",
+      label: "Products",
    },
    {
-      href: "#pricing",
-      label: "Pricing",
+      href: "#promo",
+      label: "Promo",
    },
    {
-      href: "#faq",
-      label: "FAQ",
+      href: "#contact",
+      label: "Contact Us",
    },
 ];
 
@@ -57,7 +57,7 @@ export const Navbar = () => {
                      className="ml-2 font-bold text-xl flex items-center gap-x-2"
                   >
                      <LogoIcon />
-                     ShadcnUI/React
+                     Ecommerce
                   </a>
                </NavigationMenuItem>
 

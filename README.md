@@ -19,3 +19,5 @@
 1. Shadcn => ui component
 2. Zustand => global client state management
 3. Tanstack Query => server state management & data fetching
+4. Zod => data validation
+5. React-hook-form => form hook

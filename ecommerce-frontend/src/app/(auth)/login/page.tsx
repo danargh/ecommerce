@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"; // Import the zodResolver function from the correct path
-import { RegisterSchema } from "@/lib/validation";
+import { LoginSchema } from "@/lib/validation";
 import * as z from "zod";
 import {
    Form,
@@ -18,26 +18,30 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FormAlert } from "@/components/form-alert";
 import Link from "next/link";
-import { useState, useTransition } from "react";
+import { useTransition, useState } from "react";
+// import { useRouter } from "next/navigation";
 
 export default function page() {
    const [error, setError] = useState("");
-   const [sucess, setSucess] = useState("");
    const [isTransition, setTransition] = useTransition();
+   // const router = useRouter();
 
-   const form = useForm<z.infer<typeof RegisterSchema>>({
-      resolver: zodResolver(RegisterSchema),
+   // useEffect(() => {
+   //    if (session) {
+   //       router.push("/dashboard");
+   //    }
+   // }, [router]);
+
+   const form = useForm<z.infer<typeof LoginSchema>>({
+      resolver: zodResolver(LoginSchema),
       defaultValues: {
-         name: "",
          email: "",
          password: "",
-         confirmPassword: "",
       },
    });
 
-   const onSubmit = (data: z.infer<typeof RegisterSchema>) => {
+   const onSubmit = (data: z.infer<typeof LoginSchema>) => {
       setError("");
-      setSucess("");
 
       setTransition(() => {
          console.log(data);
@@ -53,26 +57,9 @@ export default function page() {
                onSubmit={form.handleSubmit(onSubmit)}
             >
                <h2 className="flex justify-center text-2xl font-bold mb-4">
-                  Register
+                  Login
                </h2>
                <div className="flex flex-col gap-y-4">
-                  <FormField
-                     control={form.control}
-                     name="name"
-                     render={({ field }) => (
-                        <FormItem>
-                           <FormLabel>Name</FormLabel>
-                           <FormControl>
-                              <Input
-                                 {...field}
-                                 placeholder="john_doe"
-                                 type="text"
-                              />
-                           </FormControl>
-                           <FormMessage />
-                        </FormItem>
-                     )}
-                  />
                   <FormField
                      control={form.control}
                      name="email"
@@ -82,6 +69,7 @@ export default function page() {
                            <FormControl>
                               <Input
                                  {...field}
+                                 disabled={isTransition}
                                  placeholder="johndoe@gmail.com"
                                  type="email"
                               />
@@ -97,20 +85,12 @@ export default function page() {
                         <FormItem>
                            <FormLabel>Password</FormLabel>
                            <FormControl>
-                              <Input {...field} type="password" />
-                           </FormControl>
-                           <FormMessage />
-                        </FormItem>
-                     )}
-                  />
-                  <FormField
-                     control={form.control}
-                     name="confirmPassword"
-                     render={({ field }) => (
-                        <FormItem>
-                           <FormLabel>Confirm Password</FormLabel>
-                           <FormControl>
-                              <Input {...field} type="password" />
+                              <Input
+                                 {...field}
+                                 disabled={isTransition}
+                                 placeholder="johndoe@gmail.com"
+                                 type="password"
+                              />
                            </FormControl>
                            <FormMessage />
                         </FormItem>
@@ -118,21 +98,22 @@ export default function page() {
                   />
                </div>
                {error && <FormAlert type="error">{error}</FormAlert>}
-               {sucess && <FormAlert type="success">{sucess}</FormAlert>}
+
                <Button
                   type="submit"
                   variant="default"
                   className="w-full mt-4 mb-2"
+                  disabled={isTransition}
                >
                   Submit
                </Button>
                <p className="text-sm flex justify-center"> - or - </p>
-               <Link href="/login">
+               <Link href="/register">
                   <Button
                      variant="outline"
                      className="flex justify-center mt-2 w-full text-primary"
                   >
-                     Login
+                     Register
                   </Button>
                </Link>
             </form>
