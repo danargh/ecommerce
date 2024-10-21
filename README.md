@@ -11,6 +11,9 @@
 5. Throttler (nest) => rate limiter
 6. Prisma => database ORM
 7. Winston => logger
+8. Jwt (nest) => authentication token based
+9. Passport (nest) => authentication library
+10. Bcrypt => hashing password
 
 ## Frontend
 

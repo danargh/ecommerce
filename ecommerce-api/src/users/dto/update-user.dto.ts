@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/swagger';
-import { CreateUserDto } from './create-user.dto';
+import { CreateUserDto } from '../../auth/dto/create-auth.dto';
 import { IsOptional, IsString } from 'class-validator';
 import { Role } from '@prisma/client';
 

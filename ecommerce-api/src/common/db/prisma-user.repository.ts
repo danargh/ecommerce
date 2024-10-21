@@ -1,13 +1,13 @@
 import { PrismaService } from './prisma.service';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { Prisma } from '@prisma/client';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { CreateUserDto } from 'src/auth/dto/create-auth.dto';
 import { Injectable } from '@nestjs/common';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 
 @Injectable()
 export class PrismaUserRepository {
-   constructor(private prisma: PrismaService) {}
+   constructor(private readonly prisma: PrismaService) {}
 
    async create(data: CreateUserDto): Promise<UserEntity> {
       // Create a new user entity with Prisma

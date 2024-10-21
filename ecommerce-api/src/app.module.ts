@@ -1,14 +1,19 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerBehindProxyGuard } from './common/guards/throttler-behind-proxy.guard';
 import { UsersModule } from './users/users.module';
-import { CoreModule } from './core/core.module';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { AuthModule } from './auth/auth.module';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+import { ErrorsInterceptor } from './common/interceptors/exception.interceptor';
+import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
+import { ProductsModule } from './products/products.module';
 
 @Module({
    imports: [
@@ -27,8 +32,10 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware';
             limit: 10,
          },
       ]),
-      CoreModule,
+
       UsersModule,
+      AuthModule,
+      ProductsModule,
    ],
    controllers: [AppController],
    providers: [
@@ -36,6 +43,10 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware';
          provide: APP_GUARD,
          useClass: ThrottlerBehindProxyGuard,
       },
+      { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
+      { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor },
+      { provide: APP_INTERCEPTOR, useClass: ErrorsInterceptor },
+      { provide: APP_INTERCEPTOR, useClass: TimeoutInterceptor },
    ],
 })
 export class AppModule implements NestModule {
