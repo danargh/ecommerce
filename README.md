@@ -10,7 +10,7 @@
 4. Config (nest) => config for .env file
 5. Throttler (nest) => rate limiter
 6. Prisma => database ORM
-7.
+7. Winston => logger
 
 ## Frontend
 

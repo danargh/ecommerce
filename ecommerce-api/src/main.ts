@@ -1,13 +1,21 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import {
+   ClassSerializerInterceptor,
+   Logger,
+   ValidationPipe,
+} from '@nestjs/common';
 import helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 async function bootstrap() {
    // use nest with express
-   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+      logger: false,
+   });
 
    // trust request from the loopback address
    app.set('trust proxy', 'loopback');
@@ -42,11 +50,16 @@ async function bootstrap() {
    app.use(helmet());
 
    // logger middleware
-   const logger = new Logger();
+   const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
    app.useLogger(logger);
 
    // exception filter
-   // app.useGlobalFilters()
+   app.useGlobalFilters(new HttpExceptionFilter());
+
+   // global serialization
+   app.useGlobalInterceptors(
+      new ClassSerializerInterceptor(app.get(Reflector)),
+   );
 
    // server listening
    const port = process.env.PORT ?? 3000;

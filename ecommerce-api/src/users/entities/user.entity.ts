@@ -4,11 +4,14 @@ import { Exclude, Expose } from 'class-transformer';
 export class UserEntity {
    id: number;
    email: string;
+   name: string;
 
    @Exclude() // Exclude password from being exposed in the response
    password: string;
 
+   @Exclude()
    role: Role;
+
    createdAt: Date;
    updatedAt: Date;
 
