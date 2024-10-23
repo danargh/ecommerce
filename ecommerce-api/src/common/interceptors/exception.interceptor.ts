@@ -7,6 +7,7 @@ import {
    Logger,
    HttpException,
    HttpStatus,
+   UnauthorizedException,
 } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';

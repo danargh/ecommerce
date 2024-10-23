@@ -10,6 +10,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { RolesGuard } from './common/guards/roles.guard';
+import { AuthGuard } from './common/guards/auth.guard';
+import { JwtService } from '@nestjs/jwt';
 
 async function bootstrap() {
    // use nest with express
@@ -60,6 +63,9 @@ async function bootstrap() {
    app.useGlobalInterceptors(
       new ClassSerializerInterceptor(app.get(Reflector)),
    );
+
+   // global guard for role
+   app.useGlobalGuards(new RolesGuard(app.get(Reflector)));
 
    // server listening
    const port = process.env.PORT ?? 3000;

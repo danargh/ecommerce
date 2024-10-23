@@ -3,6 +3,7 @@ import { CreateUserDto } from '../auth/dto/create-auth.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaUserRepository } from '../common/db/prisma-user.repository';
 import { UserEntity } from './entities/user.entity';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -16,8 +17,8 @@ export class UsersService {
       return this.userRepository.findAll();
    }
 
-   findOne(id: number) {
-      return `This action returns a #${id} user`;
+   findOne(filter: Prisma.UserWhereUniqueInput) {
+      return this.userRepository.findOne(filter);
    }
 
    update(id: number, updateUserDto: UpdateUserDto) {

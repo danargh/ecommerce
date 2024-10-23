@@ -4,6 +4,7 @@ import {
    ExceptionFilter,
    HttpException,
    HttpStatus,
+   UnauthorizedException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
@@ -19,6 +20,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
             : HttpStatus.INTERNAL_SERVER_ERROR;
 
       response.status(status).json({
+         error: exception.name,
          statusCode: status,
          message: exception.message || 'Internal server error',
          timestamp: new Date().toISOString(),

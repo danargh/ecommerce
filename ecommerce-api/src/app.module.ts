@@ -1,4 +1,4 @@
-import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
@@ -14,12 +14,30 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { ErrorsInterceptor } from './common/interceptors/exception.interceptor';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { ProductsModule } from './products/products.module';
+import { AuthGuard } from './common/guards/auth.guard';
 
 @Module({
    imports: [
       WinstonModule.forRoot({
          level: 'debug',
-         format: winston.format.json(),
+         format: winston.format.combine(
+            winston.format.colorize(), // Memberikan warna untuk level log
+            winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), // Menambahkan timestamp
+            winston.format.printf(({ timestamp, level, message, context }) => {
+               // Pastikan jika message atau context adalah objek, ubah ke format JSON
+               const formattedMessage =
+                  typeof message === 'object'
+                     ? JSON.stringify(message, null, 2)
+                     : message;
+               const formattedContext = context
+                  ? typeof context === 'object'
+                     ? JSON.stringify(context, null, 2)
+                     : context
+                  : '';
+
+               return `${timestamp} [${level}]${formattedContext ? ` [${formattedContext}]` : ''}: ${formattedMessage}`;
+            }),
+         ),
          transports: [new winston.transports.Console()],
       }),
       ConfigModule.forRoot({
@@ -42,6 +60,10 @@ import { ProductsModule } from './products/products.module';
       {
          provide: APP_GUARD,
          useClass: ThrottlerBehindProxyGuard,
+      },
+      {
+         provide: APP_GUARD,
+         useClass: AuthGuard,
       },
       { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
       { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor },
