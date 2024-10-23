@@ -13,6 +13,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { RolesGuard } from './common/guards/roles.guard';
 import { AuthGuard } from './common/guards/auth.guard';
 import { JwtService } from '@nestjs/jwt';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 async function bootstrap() {
    // use nest with express
@@ -24,7 +25,12 @@ async function bootstrap() {
    app.set('trust proxy', 'loopback');
 
    // cors enable
-   app.enableCors();
+   const corsOptions: CorsOptions = {
+      origin: 'http://localhost:3000', // Replace with the URL of the frontend (or use "*" to allow all origins)
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+   };
+   app.enableCors(corsOptions);
 
    // swagger api documentation
    const options = new DocumentBuilder()

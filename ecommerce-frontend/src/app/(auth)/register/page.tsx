@@ -46,7 +46,7 @@ export default function page() {
    };
 
    return (
-      <div className="flex justify-center mx-auto h-screen">
+      <div className="flex justify-center mx-auto h-screen items-center">
          <Form {...form}>
             <form
                className="bg-secondary div__center--vertically max-w-[400px] h-fit p-6 rounded-lg shadow-md w-full"

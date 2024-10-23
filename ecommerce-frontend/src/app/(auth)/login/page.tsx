@@ -19,18 +19,28 @@ import { Button } from "@/components/ui/button";
 import { FormAlert } from "@/components/form-alert";
 import Link from "next/link";
 import { useTransition, useState } from "react";
-// import { useRouter } from "next/navigation";
+import { useLogin } from "@/api/auth";
+import { useRouter } from "next/navigation";
 
 export default function page() {
-   const [error, setError] = useState("");
    const [isTransition, setTransition] = useTransition();
-   // const router = useRouter();
+   const {
+      data: successResponse,
+      mutate: mutateLogin,
+      status: useLoginStatus,
+      isPending,
+      error: errorReponse,
+   } = useLogin();
+   const router = useRouter();
 
-   // useEffect(() => {
-   //    if (session) {
-   //       router.push("/dashboard");
-   //    }
-   // }, [router]);
+   useEffect(() => {
+      if (useLoginStatus === "success") {
+         router.push("/dashboard");
+      }
+      // if (useValidateTokenStatus === "success") {
+      //    router.push("/invitation");
+      // }
+   }, [router, useLoginStatus]);
 
    const form = useForm<z.infer<typeof LoginSchema>>({
       resolver: zodResolver(LoginSchema),
@@ -41,16 +51,21 @@ export default function page() {
    });
 
    const onSubmit = (data: z.infer<typeof LoginSchema>) => {
-      setError("");
+      // event.preventDefault();
 
       setTransition(() => {
          console.log(data);
+         mutateLogin(data);
       });
       form.reset();
    };
 
+   // if (useValidateTokenStatus === "pending") {
+   //    return <p>Loading...</p>;
+   // }
+
    return (
-      <div className="flex justify-center mx-auto h-screen">
+      <div className="flex justify-center items-center mx-auto h-screen">
          <Form {...form}>
             <form
                className="bg-secondary div__center--vertically max-w-[400px] h-fit p-6 rounded-lg shadow-md w-full"
@@ -97,7 +112,9 @@ export default function page() {
                      )}
                   />
                </div>
-               {error && <FormAlert type="error">{error}</FormAlert>}
+               {errorReponse && (
+                  <FormAlert type="error">{errorReponse?.message}</FormAlert>
+               )}
 
                <Button
                   type="submit"
@@ -105,7 +122,7 @@ export default function page() {
                   className="w-full mt-4 mb-2"
                   disabled={isTransition}
                >
-                  Submit
+                  {isPending ? "Loading..." : "Submit"}
                </Button>
                <p className="text-sm flex justify-center"> - or - </p>
                <Link href="/register">

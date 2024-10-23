@@ -17,12 +17,12 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @ApiTags('/users')
 @Controller('users')
+@UseGuards(RolesGuard)
 export class UsersController {
    constructor(private readonly usersService: UsersService) {}
 
    @Get()
-   // @UseGuards(RolesGuard)
-   // @Roles('USER')
+   @Roles('ADMIN')
    findAll() {
       return this.usersService.findAll();
    }

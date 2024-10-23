@@ -40,7 +40,7 @@ export class AuthService {
          data.password,
       );
       if (!isValid || !user) {
-         throw new UnauthorizedException();
+         throw new UnauthorizedException('Username or password invalid.');
       }
 
       const payload: JwtPayload = {
@@ -51,5 +51,28 @@ export class AuthService {
       };
 
       return this.jwtService.signAsync(payload);
+   }
+
+   // Validate token function
+   async validateToken(token: string): Promise<JwtPayload> {
+      try {
+         // Verify token using JwtService
+         const decoded = await this.jwtService.verifyAsync<JwtPayload>(token, {
+            secret: process.env.JWT_SECRET_KEY, // Pastikan menggunakan secret key yang benar
+         });
+
+         // Check if the user exists in the database
+         const user = await this.prismaAuthRepository.findUserByEmail(
+            decoded.email,
+         );
+         if (!user) {
+            throw new UnauthorizedException('User does not exist');
+         }
+
+         // Return the decoded payload if the token is valid
+         return decoded;
+      } catch (error) {
+         throw new UnauthorizedException('Invalid token');
+      }
    }
 }

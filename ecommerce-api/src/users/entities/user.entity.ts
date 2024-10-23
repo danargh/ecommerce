@@ -24,6 +24,9 @@ export class UserEntity {
    @Expose({ groups: ['admin', 'user'] })
    products?: string[];
 
+   @Expose()
+   token?: string;
+
    constructor(partial: Partial<UserEntity>) {
       Object.assign(this, partial);
    }

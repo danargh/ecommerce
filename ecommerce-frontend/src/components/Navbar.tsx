@@ -18,6 +18,7 @@ import { buttonVariants } from "./ui/button";
 import { Menu } from "lucide-react";
 // import { ModeToggle } from "./mode-toggle";
 import { LogoIcon } from "@/assets/icons";
+import Link from "next/link";
 
 interface RouteProps {
    href: string;
@@ -95,16 +96,24 @@ export const Navbar = () => {
                                  {label}
                               </a>
                            ))}
-                           <a
+                           <Link
                               rel="noreferrer noopener"
-                              href="https://github.com/leoMirandaa/shadcn-landing-page.git"
-                              target="_blank"
+                              href="/register"
                               className={`w-[110px] border ${buttonVariants({
                                  variant: "secondary",
                               })}`}
                            >
                               Login
-                           </a>
+                           </Link>
+                           <Link
+                              rel="noreferrer noopener"
+                              href="/register"
+                              className={`border ${buttonVariants({
+                                 variant: "default",
+                              })}`}
+                           >
+                              Register
+                           </Link>
                         </nav>
                      </SheetContent>
                   </Sheet>
@@ -127,16 +136,24 @@ export const Navbar = () => {
                </nav>
 
                <div className="hidden md:flex gap-2">
-                  <a
+                  <Link
                      rel="noreferrer noopener"
-                     href="https://github.com/leoMirandaa/shadcn-landing-page.git"
-                     target="_blank"
+                     href="/login"
                      className={`border ${buttonVariants({
                         variant: "secondary",
                      })}`}
                   >
                      Login
-                  </a>
+                  </Link>
+                  <Link
+                     rel="noreferrer noopener"
+                     href="/register"
+                     className={`border ${buttonVariants({
+                        variant: "default",
+                     })}`}
+                  >
+                     Register
+                  </Link>
 
                   {/* <ModeToggle /> */}
                </div>

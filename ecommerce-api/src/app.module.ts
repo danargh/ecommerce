@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+   MiddlewareConsumer,
+   Module,
+   NestModule,
+   RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
@@ -9,12 +14,13 @@ import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { AuthModule } from './auth/auth.module';
-import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { ErrorsInterceptor } from './common/interceptors/exception.interceptor';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { ProductsModule } from './products/products.module';
 import { AuthGuard } from './common/guards/auth.guard';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthMiddleware } from './common/middleware/auth.middleware';
 
 @Module({
    imports: [
@@ -50,6 +56,12 @@ import { AuthGuard } from './common/guards/auth.guard';
             limit: 10,
          },
       ]),
+      JwtModule.register({
+         secret: process.env.JWT_SECRET_KEY,
+         signOptions: {
+            expiresIn: process.env.EXPIRES_IN,
+         },
+      }),
 
       UsersModule,
       AuthModule,
@@ -61,18 +73,23 @@ import { AuthGuard } from './common/guards/auth.guard';
          provide: APP_GUARD,
          useClass: ThrottlerBehindProxyGuard,
       },
-      {
-         provide: APP_GUARD,
-         useClass: AuthGuard,
-      },
-      { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
+      // {
+      //    provide: APP_GUARD,
+      //    useClass: AuthGuard,
+      // },
+      // { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
       { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor },
       { provide: APP_INTERCEPTOR, useClass: ErrorsInterceptor },
       { provide: APP_INTERCEPTOR, useClass: TimeoutInterceptor },
    ],
 })
-export class AppModule implements NestModule {
+export class AppModule {
    configure(consumer: MiddlewareConsumer) {
-      consumer.apply(LoggerMiddleware).forRoutes('*');
+      consumer
+         .apply(AuthMiddleware) // Apply the AuthMiddleware
+         .forRoutes(
+            { path: 'users', method: RequestMethod.ALL },
+            { path: 'products', method: RequestMethod.ALL },
+         ); // For all routes
    }
 }

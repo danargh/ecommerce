@@ -10,15 +10,17 @@ import {
    HttpException,
    HttpCode,
    HttpStatus,
+   Req,
+   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/auth/dto/create-auth.dto';
-import { UserEntity } from 'src/users/entities/user.entity';
 import { LoginAuthDto } from './dto/login-auth-dto';
 import { ApiTags } from '@nestjs/swagger';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { UsersService } from '../users/users.service';
+import { Request } from 'express';
 
 @ApiTags('/auth')
 @Controller('auth')
@@ -31,10 +33,15 @@ export class AuthController {
 
    @HttpCode(HttpStatus.CREATED)
    @Post('register')
-   async register(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
+   async register(@Body() createUserDto: CreateUserDto): Promise<any> {
       this.logger.debug(`Register new user ${JSON.stringify(createUserDto)}`);
 
-      return this.authService.register(createUserDto);
+      this.authService.register(createUserDto);
+
+      return {
+         message: 'Register successfull.',
+         data: createUserDto,
+      };
    }
 
    @HttpCode(HttpStatus.OK)
@@ -42,9 +49,31 @@ export class AuthController {
    async login(@Body() loginDto: LoginAuthDto): Promise<any> {
       const token = await this.authService.login(loginDto);
       const user = await this.usersService.findOne({ email: loginDto.email });
+      user.token = token;
+
       return {
-         token: token,
-         user,
+         message: 'Login successfull.',
+         data: user,
       };
+   }
+
+   // Validate token endpoint
+   @HttpCode(HttpStatus.OK)
+   @Get('validate')
+   async validateToken(@Req() req: Request): Promise<any> {
+      const token = req.headers.authorization?.split(' ')[1]; // Extract token from Authorization header
+      if (!token) {
+         throw new UnauthorizedException('Token not provided');
+      }
+
+      try {
+         const payload = await this.authService.validateToken(token); // Validasi token dengan authService
+         return {
+            message: 'Token is valid.',
+            data: payload,
+         };
+      } catch (error) {
+         throw new UnauthorizedException('Invalid token');
+      }
    }
 }
