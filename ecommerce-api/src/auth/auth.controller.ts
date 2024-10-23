@@ -21,6 +21,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { UsersService } from '../users/users.service';
 import { Request } from 'express';
+import { UserEntity } from 'src/users/entities/user.entity';
 
 @ApiTags('/auth')
 @Controller('auth')
@@ -36,11 +37,11 @@ export class AuthController {
    async register(@Body() createUserDto: CreateUserDto): Promise<any> {
       this.logger.debug(`Register new user ${JSON.stringify(createUserDto)}`);
 
-      this.authService.register(createUserDto);
+      const createdUser = await this.authService.register(createUserDto);
 
       return {
          message: 'Register successfull.',
-         data: createUserDto,
+         data: new UserEntity(createdUser),
       };
    }
 

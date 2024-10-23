@@ -1,5 +1,6 @@
 import { hashingPassword, JwtPayload } from 'src/common/utils/index.utils';
 import {
+   BadRequestException,
    HttpException,
    Injectable,
    UnauthorizedException,
@@ -25,7 +26,7 @@ export class AuthService {
          email: data.email,
       });
       if (existsUser) {
-         throw new HttpException('User already exists', 400);
+         throw new BadRequestException('User already exists.');
       }
 
       data.password = await hashingPassword(data.password);
@@ -50,7 +51,7 @@ export class AuthService {
          role: user.role,
       };
 
-      return this.jwtService.signAsync(payload);
+      return await this.jwtService.signAsync(payload);
    }
 
    // Validate token function
