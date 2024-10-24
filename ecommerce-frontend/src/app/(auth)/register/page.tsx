@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"; // Import the zodResolver function from the correct path
 import { RegisterSchema } from "@/lib/validation";
@@ -13,17 +13,32 @@ import {
    FormItem,
    FormLabel,
    FormMessage,
-} from "@/components/form";
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FormAlert } from "@/components/form-alert";
 import Link from "next/link";
 import { useState, useTransition } from "react";
+import { useRegister } from "@/api/auth";
+import { useRouter } from "next/navigation";
+import { RegisterRequest } from "@/interfaces";
 
 export default function page() {
-   const [error, setError] = useState("");
-   const [sucess, setSucess] = useState("");
+   const {
+      data: successResponse,
+      mutate: mutateRegister,
+      status: useRegisterStatus,
+      isPending,
+      error: errorReponse,
+   } = useRegister();
    const [isTransition, setTransition] = useTransition();
+   const router = useRouter();
+
+   useEffect(() => {
+      // if (useRegisterStatus === "success") {
+      //    router.push("/login");
+      // }
+   }, [router, useRegisterStatus]);
 
    const form = useForm<z.infer<typeof RegisterSchema>>({
       resolver: zodResolver(RegisterSchema),
@@ -36,10 +51,12 @@ export default function page() {
    });
 
    const onSubmit = (data: z.infer<typeof RegisterSchema>) => {
-      setError("");
-      setSucess("");
-
       setTransition(() => {
+         mutateRegister({
+            name: data.name,
+            email: data.email,
+            password: data.password,
+         } as RegisterRequest);
          console.log(data);
       });
       form.reset();
@@ -117,8 +134,14 @@ export default function page() {
                      )}
                   />
                </div>
-               {error && <FormAlert type="error">{error}</FormAlert>}
-               {sucess && <FormAlert type="success">{sucess}</FormAlert>}
+               {errorReponse && (
+                  <FormAlert type="error">{errorReponse.message}</FormAlert>
+               )}
+               {successResponse && (
+                  <FormAlert type="success">
+                     {successResponse.message}
+                  </FormAlert>
+               )}
                <Button
                   type="submit"
                   variant="default"

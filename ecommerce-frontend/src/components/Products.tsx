@@ -1,4 +1,5 @@
 import React from "react";
+import { ProductCard } from "./ProductCard";
 
 export function Products() {
    return (
@@ -12,6 +13,13 @@ export function Products() {
                List
             </span>
          </h2>
+         <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4">
+            {Array(10)
+               .fill(null)
+               .map((_, index) => (
+                  <ProductCard key={index} />
+               ))}
+         </div>
       </section>
    );
 }

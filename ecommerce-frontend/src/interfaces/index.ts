@@ -33,15 +33,28 @@ export interface LoginResponse {
    token: string;
 }
 
-export interface UserSetting {
-   role: string;
-   username: string;
-}
-
 // Auth request
 export interface LoginRequest {
    email: string;
    password: string;
+}
+
+// register response
+export interface RegisterResponse {
+   email: string;
+   password: string;
+}
+
+// register request
+export interface RegisterRequest {
+   name: string;
+   email: string;
+   password: string;
+}
+
+export interface UserSetting {
+   role: string;
+   username: string;
 }
 
 // query
