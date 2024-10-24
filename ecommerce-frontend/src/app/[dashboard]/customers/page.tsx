@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { columns } from "@/components/table/column";
 import { DataTable } from "@/components/table/data-table";
+import { DashboardTableCustomers } from "@/components/ui/DashboardTableCustomers";
 // import { taskSchema } from "./data/schema";
 
 const tasks = [
@@ -28,14 +29,11 @@ export default async function CustomersPage() {
             <div className="flex items-center justify-between space-y-2">
                <div>
                   <h2 className="text-2xl font-bold tracking-tight">
-                     Welcome back!
+                     Pelanggan
                   </h2>
-                  <p className="text-muted-foreground">
-                     Here&apos;s a list of your tasks for this month!
-                  </p>
                </div>
             </div>
-            <DataTable data={tasks} columns={columns} />
+            <DashboardTableCustomers />
          </div>
       </>
    );

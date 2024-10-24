@@ -19,6 +19,7 @@ import {
    SelectValue,
 } from "@/components/ui/select";
 import Image from "next/image";
+import { Checkout } from "./Checkout";
 
 export function ProductCard() {
    return (
@@ -34,7 +35,8 @@ export function ProductCard() {
          </CardContent>
          <CardFooter className="flex justify-between">
             <Button variant="outline">Cancel</Button>
-            <Button>Deploy</Button>
+            {/* <Button>Deploy</Button> */}
+            <Checkout />
          </CardFooter>
       </Card>
    );

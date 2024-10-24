@@ -40,9 +40,27 @@ export const columns: ColumnDef<Task>[] = [
    {
       accessorKey: "id",
       header: ({ column }) => (
-         <DataTableColumnHeader column={column} title="Task" />
+         <DataTableColumnHeader column={column} title="Id" />
       ),
       cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
+      enableSorting: false,
+      enableHiding: false,
+   },
+   {
+      accessorKey: "name",
+      header: ({ column }) => (
+         <DataTableColumnHeader column={column} title="Nama Produk" />
+      ),
+      cell: ({ row }) => <div className="w-[80px]">{row.getValue("name")}</div>,
+      enableSorting: false,
+      enableHiding: false,
+   },
+   {
+      accessorKey: "description",
+      header: ({ column }) => (
+         <DataTableColumnHeader column={column} title="Deskripsi Produk" />
+      ),
+      cell: ({ row }) => <div className="w-[80px]">{row.getValue("name")}</div>,
       enableSorting: false,
       enableHiding: false,
    },

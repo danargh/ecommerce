@@ -1,3 +1,6 @@
+"use client";
+
+import Cookies from "universal-cookie";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Button } from "./ui/button";
 import {
@@ -7,11 +10,19 @@ import {
    DropdownMenuItem,
    DropdownMenuLabel,
    DropdownMenuSeparator,
-   DropdownMenuShortcut,
    DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { useRouter } from "next/navigation";
 
 export function Profile() {
+   const router = useRouter();
+   const cookies = new Cookies();
+
+   const logout = () => {
+      cookies.remove("token");
+      router.push("/login");
+   };
+
    return (
       <DropdownMenu>
          <DropdownMenuTrigger asChild>
@@ -32,25 +43,11 @@ export function Profile() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-               <DropdownMenuItem>
-                  Profile
-                  <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-               </DropdownMenuItem>
-               <DropdownMenuItem>
-                  Billing
-                  <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-               </DropdownMenuItem>
-               <DropdownMenuItem>
-                  Settings
-                  <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-               </DropdownMenuItem>
-               <DropdownMenuItem>New Team</DropdownMenuItem>
+               <DropdownMenuItem>Profile</DropdownMenuItem>
+               <DropdownMenuItem>Settings</DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-               Log out
-               <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-            </DropdownMenuItem>
+            <DropdownMenuItem onClick={logout}>Log out</DropdownMenuItem>
          </DropdownMenuContent>
       </DropdownMenu>
    );

@@ -21,6 +21,8 @@ import { ProductsModule } from './products/products.module';
 import { AuthGuard } from './common/guards/auth.guard';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthMiddleware } from './common/middleware/auth.middleware';
+import { OrdersModule } from './orders/orders.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
    imports: [
@@ -66,6 +68,8 @@ import { AuthMiddleware } from './common/middleware/auth.middleware';
       UsersModule,
       AuthModule,
       ProductsModule,
+      OrdersModule,
+      CategoryModule,
    ],
    controllers: [AppController],
    providers: [
