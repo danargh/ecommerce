@@ -97,7 +97,7 @@ export class AppModule {
             { path: 'products*', method: RequestMethod.PATCH },
             { path: 'products*', method: RequestMethod.POST },
             { path: 'orders*', method: RequestMethod.ALL },
-            { path: 'category*', method: RequestMethod.ALL },
+            // { path: 'categories*', method: RequestMethod.ALL },
          ); // For all routes
    }
 }

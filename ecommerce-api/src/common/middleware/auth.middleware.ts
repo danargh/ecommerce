@@ -11,10 +11,11 @@ export class AuthMiddleware implements NestMiddleware {
    constructor(private jwtService: JwtService) {}
 
    async use(req: Request, res: Response, next: NextFunction) {
-      console.log('auth middleware');
       const token = this.extractTokenFromHeader(req);
+
       if (!token) {
          throw new UnauthorizedException('Token is missing');
+         // next();
       }
 
       try {
