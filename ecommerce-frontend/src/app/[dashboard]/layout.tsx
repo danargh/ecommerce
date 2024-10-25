@@ -16,13 +16,13 @@ export default async function RootLayout({
 }: {
    children: React.ReactNode;
 }) {
-   const { success } = await validateToken({
-      success: false,
-      error: false,
-   });
-   if (!success === true) {
-      redirect("/login");
-   }
+   // const { success } = await validateToken({
+   //    success: false,
+   //    error: false,
+   // });
+   // if (!success === true) {
+   //    redirect("/login");
+   // }
    return (
       <main className="flex-col md:flex">
          <div className="border-b">

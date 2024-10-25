@@ -25,12 +25,16 @@ async function bootstrap() {
    app.set('trust proxy', 'loopback');
 
    // cors enable
-   const corsOptions: CorsOptions = {
-      origin: 'http://localhost:3000', // Replace with the URL of the frontend (or use "*" to allow all origins)
+   // const corsOptions: CorsOptions = {
+   //    origin: ['https://ecommerce-nestjs.netlify.app', 'http://localhost:3000'], // Replace with the URL of the frontend (or use "*" to allow all origins)
+   //    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+   //    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+   // };
+   app.enableCors({
+      origin: true,
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-      credentials: true, // Allow credentials (cookies, authorization headers, etc.)
-   };
-   app.enableCors(corsOptions);
+      credentials: true,
+   });
 
    // swagger api documentation
    const options = new DocumentBuilder()

@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { PrismaOrderRepository } from 'src/common/db/prisma-order-repository';
+import { OrderEntity } from './entities/order.entity'; // Pastikan Anda telah membuat OrderEntity
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class OrdersService {
-  create(createOrderDto: CreateOrderDto) {
-    return 'This action adds a new order';
-  }
+   constructor(private readonly orderRepository: PrismaOrderRepository) {}
 
-  findAll() {
-    return `This action returns all orders`;
-  }
+   async create(createOrderDto: CreateOrderDto): Promise<OrderEntity> {
+      return this.orderRepository.create(createOrderDto);
+   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
-  }
+   async findAll() {
+      return this.orderRepository.findAll();
+   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
-  }
+   async findOne(filter: number) {
+      return this.orderRepository.findOne(filter);
+   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
-  }
+   async update(id: number, orderDto: UpdateOrderDto) {
+      return this.orderRepository.update(id, orderDto);
+   }
+
+   async remove(id: number) {
+      return this.orderRepository.remove(id);
+   }
 }

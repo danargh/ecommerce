@@ -48,6 +48,7 @@ export class AuthController {
    @HttpCode(HttpStatus.OK)
    @Post('login')
    async login(@Body() loginDto: LoginAuthDto): Promise<any> {
+      this.logger.debug(`Login user ${JSON.stringify(loginDto)}`);
       const token = await this.authService.login(loginDto);
       const user = await this.usersService.findOne({ email: loginDto.email });
       user.token = token;
@@ -62,19 +63,20 @@ export class AuthController {
    @HttpCode(HttpStatus.OK)
    @Get('validate')
    async validateToken(@Req() req: Request): Promise<any> {
+      this.logger.debug(`Token ${JSON.stringify(req)}`);
+
       const token = req.headers.authorization?.split(' ')[1]; // Extract token from Authorization header
       if (!token) {
          throw new UnauthorizedException('Token not provided');
       }
 
-      try {
-         const payload = await this.authService.validateToken(token); // Validasi token dengan authService
-         return {
-            message: 'Token is valid.',
-            data: payload,
-         };
-      } catch (error) {
+      const payload = await this.authService.validateToken(token); // Validasi token dengan authService
+      if (!payload) {
          throw new UnauthorizedException('Invalid token');
       }
+      return {
+         message: 'Token is valid.',
+         data: payload,
+      };
    }
 }

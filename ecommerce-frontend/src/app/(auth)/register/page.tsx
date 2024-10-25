@@ -22,6 +22,7 @@ import { useState, useTransition } from "react";
 import { useRegister } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import { RegisterRequest } from "@/interfaces";
+import { LogoIcon } from "@/assets/icons";
 
 export default function page() {
    const {
@@ -69,6 +70,9 @@ export default function page() {
                className="bg-secondary div__center--vertically max-w-[400px] h-fit p-6 rounded-lg shadow-md w-full"
                onSubmit={form.handleSubmit(onSubmit)}
             >
+               <Link className="flex justify-center" href={"/"}>
+                  <LogoIcon />
+               </Link>
                <h2 className="flex justify-center text-2xl font-bold mb-4">
                   Register
                </h2>

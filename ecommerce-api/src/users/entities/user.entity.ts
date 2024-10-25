@@ -15,16 +15,9 @@ export class UserEntity {
    createdAt: Date;
    updatedAt: Date;
 
-   @Expose({ groups: ['admin'] }) // Optional, only expose to specific roles
    sessions?: string[];
-
-   @Expose({ groups: ['admin'] })
    orders?: string[];
-
-   @Expose({ groups: ['admin', 'user'] })
    products?: string[];
-
-   @Expose()
    token?: string;
 
    constructor(partial: Partial<UserEntity>) {

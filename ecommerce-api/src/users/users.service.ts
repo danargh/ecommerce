@@ -13,19 +13,19 @@ export class UsersService {
       return this.userRepository.create(createUserDto);
    }
 
-   findAll() {
+   async findAll() {
       return this.userRepository.findAll();
    }
 
-   findOne(filter: Prisma.UserWhereUniqueInput) {
+   async findOne(filter: Prisma.UserWhereUniqueInput) {
       return this.userRepository.findOne(filter);
    }
 
-   update(id: number, updateUserDto: UpdateUserDto) {
-      return `This action updates a #${id} user`;
+   async update(id: number, userDto: UpdateUserDto) {
+      return this.userRepository.update(id, userDto);
    }
 
-   remove(id: number) {
-      return `This action removes a #${id} user`;
+   async remove(id: number) {
+      return this.userRepository.remove(id);
    }
 }

@@ -21,18 +21,8 @@ model User {
    role      Role      @default(USER)
    createdAt DateTime  @default(now())
    updatedAt DateTime  @updatedAt
-   sessions  Session[]
    orders    Order[] // Relation with Order
    products  Product[] // For admin users who can manage products
-}
-
-model Session {
-   id           Int      @id @default(autoincrement())
-   refreshToken String   @unique
-   userId       Int
-   user         User     @relation(fields: [userId], references: [id])
-   createdAt    DateTime @default(now())
-   updatedAt    DateTime @updatedAt
 }
 
 model Product {

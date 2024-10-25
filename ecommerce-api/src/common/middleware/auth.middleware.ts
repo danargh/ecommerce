@@ -11,6 +11,7 @@ export class AuthMiddleware implements NestMiddleware {
    constructor(private jwtService: JwtService) {}
 
    async use(req: Request, res: Response, next: NextFunction) {
+      console.log('auth middleware');
       const token = this.extractTokenFromHeader(req);
       if (!token) {
          throw new UnauthorizedException('Token is missing');
@@ -22,7 +23,7 @@ export class AuthMiddleware implements NestMiddleware {
          });
          // Assign payload to request object so it can be accessed in route handlers
          req['user'] = payload;
-         console.log(payload); // You can log the payload if needed
+         console.log('auth middleware', payload); // You can log the payload if needed
          next(); // Continue to the next middleware or route handler
       } catch (err) {
          throw new UnauthorizedException('Invalid token');

@@ -92,8 +92,12 @@ export class AppModule {
       consumer
          .apply(AuthMiddleware) // Apply the AuthMiddleware
          .forRoutes(
-            { path: 'users', method: RequestMethod.ALL },
-            { path: 'products', method: RequestMethod.ALL },
+            { path: 'users*', method: RequestMethod.ALL },
+            { path: 'products*', method: RequestMethod.DELETE },
+            { path: 'products*', method: RequestMethod.PATCH },
+            { path: 'products*', method: RequestMethod.POST },
+            { path: 'orders*', method: RequestMethod.ALL },
+            { path: 'category*', method: RequestMethod.ALL },
          ); // For all routes
    }
 }

@@ -21,6 +21,7 @@ import Link from "next/link";
 import { useTransition, useState } from "react";
 import { useLogin } from "@/api/auth";
 import { useRouter } from "next/navigation";
+import { LogoIcon } from "@/assets/icons";
 
 export default function page() {
    const [isTransition, setTransition] = useTransition();
@@ -71,6 +72,9 @@ export default function page() {
                className="bg-secondary div__center--vertically max-w-[400px] h-fit p-6 rounded-lg shadow-md w-full"
                onSubmit={form.handleSubmit(onSubmit)}
             >
+               <Link className="flex justify-center" href={"/"}>
+                  <LogoIcon />
+               </Link>
                <h2 className="flex justify-center text-2xl font-bold mb-4">
                   Login
                </h2>
