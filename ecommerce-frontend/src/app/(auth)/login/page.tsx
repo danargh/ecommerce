@@ -19,29 +19,44 @@ import { Button } from "@/components/ui/button";
 import { FormAlert } from "@/components/form-alert";
 import Link from "next/link";
 import { useTransition, useState } from "react";
-import { useLogin } from "@/api/auth";
+import { useLogin, useValidateToken } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import { LogoIcon } from "@/assets/icons";
+import { useUserSlice } from "@/global/store";
 
 export default function page() {
+   const setUser = useUserSlice((state) => state.setUser);
    const [isTransition, setTransition] = useTransition();
    const {
       data: successResponse,
-      mutate: mutateLogin,
       status: useLoginStatus,
       isPending,
       error: errorReponse,
+      mutateAsync: mutateAsyncLogin,
    } = useLogin();
+   const {
+      data: successResponseValidate,
+      status: useValidateStatus,
+      error: errorReponseValidate,
+   } = useValidateToken();
    const router = useRouter();
 
    useEffect(() => {
       if (useLoginStatus === "success") {
-         router.push("/dashboard");
+         if (successResponse.data.role === "ADMIN") {
+            router.push("/dashboard");
+         } else {
+            router.push("/");
+         }
       }
-      // if (useValidateTokenStatus === "success") {
-      //    router.push("/invitation");
-      // }
-   }, [router, useLoginStatus]);
+      if (useValidateStatus === "success") {
+         if (successResponseValidate.data.role === "ADMIN") {
+            router.push("/dashboard");
+         } else {
+            router.push("/");
+         }
+      }
+   }, [router, useLoginStatus, useValidateStatus]);
 
    const form = useForm<z.infer<typeof LoginSchema>>({
       resolver: zodResolver(LoginSchema),
@@ -55,8 +70,16 @@ export default function page() {
       // event.preventDefault();
 
       setTransition(() => {
-         console.log(data);
-         mutateLogin(data);
+         mutateAsyncLogin(data, {
+            onSuccess: (data) => {
+               setUser({
+                  role: data.data.role,
+                  email: data.data.email,
+                  name: data.data.name,
+                  id: data.data.id,
+               });
+            },
+         });
       });
       form.reset();
    };

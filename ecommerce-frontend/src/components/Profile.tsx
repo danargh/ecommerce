@@ -13,13 +13,20 @@ import {
    DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useRouter } from "next/navigation";
+import { UserSlice, useUIStateSlice, useUserSlice } from "@/global/store";
+import { useStore } from "zustand";
 
 export function Profile() {
+   const user = useUserSlice((state) => state.user);
+   const setIsAuth = useUIStateSlice((state) => state.setIsAuth);
    const router = useRouter();
    const cookies = new Cookies();
 
    const logout = () => {
       cookies.remove("token");
+      window.localStorage.clear();
+      setIsAuth(false);
+
       router.push("/login");
    };
 
@@ -35,9 +42,11 @@ export function Profile() {
          <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">shadcn</p>
+                  <p className="text-sm font-medium leading-none">
+                     {user?.name}
+                  </p>
                   <p className="text-xs leading-none text-muted-foreground">
-                     m@example.com
+                     {user?.email}
                   </p>
                </div>
             </DropdownMenuLabel>

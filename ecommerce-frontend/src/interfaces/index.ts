@@ -13,11 +13,7 @@ export interface User {
    role: "ADMIN" | "USER";
    createdAt: Date;
    updatedAt: Date;
-   sessions?: number;
-   orders?: number;
-   products: number;
 }
-
 // user reponse
 export interface LoginResponse {
    id: number;
@@ -26,10 +22,6 @@ export interface LoginResponse {
    role: "ADMIN" | "USER";
    createdAt: Date;
    updatedAt: Date;
-   sessions?: number;
-   orders?: number;
-   products: number;
-
    token: string;
 }
 
@@ -38,13 +30,21 @@ export interface LoginRequest {
    email: string;
    password: string;
 }
+// validate response
+export interface ValidateResponse {
+   id: string;
+   email: string;
+   name: string;
+   role: string;
+   iat: number;
+   exp: number;
+}
 
 // register response
 export interface RegisterResponse {
    email: string;
    password: string;
 }
-
 // register request
 export interface RegisterRequest {
    name: string;
@@ -52,9 +52,15 @@ export interface RegisterRequest {
    password: string;
 }
 
+// global state
 export interface UserSetting {
    role: string;
-   username: string;
+   name: string;
+   email: string;
+   id: number;
+}
+export interface UISetting {
+   isAuth: boolean;
 }
 
 // query
@@ -62,4 +68,24 @@ export interface QueryResult<T> {
    data: T | undefined;
    error: Error | null;
    isLoading: boolean;
+}
+
+// category
+export interface CategoryResponse {
+   id: number;
+   name: string;
+   description: string;
+}
+
+// Product response
+export interface ProductResponse {
+   id: number;
+   name: string;
+   description: string;
+   price: number;
+   stock: number;
+   createdAt: Date;
+   updatedAt: Date;
+   createdById: User; // Relasi dengan User Entity
+   categoryId: CategoryResponse; // Relasi dengan Category Entity (nullable)
 }

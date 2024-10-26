@@ -7,6 +7,7 @@ import {
    RegisterResponse,
    Response,
    User,
+   ValidateResponse,
 } from "@/interfaces";
 import config from "@/config";
 import { useUserSlice } from "@/global/store";
@@ -30,6 +31,7 @@ export const postLogin = async (
 };
 export const useLogin = () => {
    // cookies.remove("token");
+   // const [setUser] = useUserSlice((state) => [state.setUser, state.user]);
    return useMutation<Response<LoginResponse>, AxiosError, LoginRequest>({
       mutationKey: ["login"],
       mutationFn: async (user: LoginRequest) => {
@@ -39,6 +41,9 @@ export const useLogin = () => {
       onSuccess: (data) => {
          // Ambil userData dari response jika diperlukan
          const userData = data.data;
+
+         // set global state
+         // setUser(userData);
 
          // Set cookie atau update state dengan userData
          cookies.set("token", userData.token, {
@@ -90,6 +95,40 @@ export const useRegister = () => {
       onError: (error) => {
          console.error("Register failed:", error.message);
          return error;
+      },
+   });
+};
+
+// Fungsi untuk memvalidasi token
+export const postValidateToken = async (): Promise<
+   Response<ValidateResponse>
+> => {
+   const token = cookies.get("token");
+   if (!token) throw new Error("Token not found");
+
+   return await axios
+      .get(`${config.BASE_URL}/auth/validate`, {
+         headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+         },
+         withCredentials: true,
+      })
+      .then((res) => {
+         return res.data as Response<ValidateResponse>;
+      })
+      .catch((err: AxiosError) => {
+         throw err.response?.data;
+      });
+};
+
+// Hook untuk menggunakan validasi token
+export const useValidateToken = () => {
+   return useQuery<Response<ValidateResponse>, AxiosError>({
+      queryKey: ["validate token"],
+      queryFn: async () => {
+         const data = await postValidateToken();
+         return data;
       },
    });
 };

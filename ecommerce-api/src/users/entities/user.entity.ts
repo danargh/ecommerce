@@ -9,7 +9,6 @@ export class UserEntity {
    @Exclude() // Exclude password from being exposed in the response
    password: string;
 
-   @Exclude()
    role: Role;
 
    createdAt: Date;

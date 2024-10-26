@@ -8,8 +8,8 @@ export interface UserSlice {
 }
 
 export interface UIStateSlice {
-   activeSidebar: boolean;
-   setActiveSidebar: (nav: boolean) => void;
+   isAuth: boolean;
+   setIsAuth: (nav: boolean) => void;
 }
 
 export const useUserSlice = create<UserSlice>()(
@@ -25,6 +25,6 @@ export const useUserSlice = create<UserSlice>()(
 );
 
 export const useUIStateSlice = create<UIStateSlice>()((set) => ({
-   activeSidebar: false,
-   setActiveSidebar: (nav) => set(() => ({ activeSidebar: nav })),
+   isAuth: false,
+   setIsAuth: (status) => set(() => ({ isAuth: status })),
 }));

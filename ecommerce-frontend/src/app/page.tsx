@@ -8,12 +8,9 @@ import { redirect } from "next/navigation";
 export default async function Home() {
    const { success } = await validateToken({ success: false, error: false });
 
-   // if (success) {
-   //    redirect("/dashboard");
-   // }
    return (
       <>
-         <Navbar />
+         <Navbar isAuthenticated={success} />
          <Hero />
          <Products />
          <Footer />

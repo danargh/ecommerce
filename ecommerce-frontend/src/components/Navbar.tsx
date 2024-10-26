@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
    NavigationMenu,
    NavigationMenuItem,
@@ -19,10 +19,16 @@ import { Menu } from "lucide-react";
 // import { ModeToggle } from "./mode-toggle";
 import { LogoIcon } from "@/assets/icons";
 import Link from "next/link";
+import { Profile } from "./Profile";
+import { useUIStateSlice } from "@/global/store";
+import { Checkout } from "./Checkout";
 
 interface RouteProps {
    href: string;
    label: string;
+}
+interface Props {
+   isAuthenticated: boolean;
 }
 
 const routeList: RouteProps[] = [
@@ -44,8 +50,16 @@ const routeList: RouteProps[] = [
    },
 ];
 
-export const Navbar = () => {
+export const Navbar = ({ isAuthenticated }: Props) => {
    const [isOpen, setIsOpen] = useState<boolean>(false);
+   const setIsAuth = useUIStateSlice((state) => state.setIsAuth);
+   const isAuth = useUIStateSlice((state) => state.isAuth);
+
+   useEffect(() => {
+      setIsAuth(isAuthenticated);
+   }, [setIsAuth]);
+
+   console.log(isAuthenticated);
 
    return (
       <header className="sticky border-b-[1px] top-0 z-40 w-full bg-white dark:border-b-slate-700 dark:bg-background">
@@ -96,24 +110,35 @@ export const Navbar = () => {
                                  {label}
                               </a>
                            ))}
-                           <Link
-                              rel="noreferrer noopener"
-                              href="/register"
-                              className={`w-[110px] border ${buttonVariants({
-                                 variant: "secondary",
-                              })}`}
-                           >
-                              Login
-                           </Link>
-                           <Link
-                              rel="noreferrer noopener"
-                              href="/register"
-                              className={`border ${buttonVariants({
-                                 variant: "default",
-                              })}`}
-                           >
-                              Register
-                           </Link>
+                           {isAuth ? (
+                              <>
+                                 <Checkout />
+                                 <Profile />
+                              </>
+                           ) : (
+                              <>
+                                 <Link
+                                    rel="noreferrer noopener"
+                                    href="/register"
+                                    className={`w-[110px] border ${buttonVariants(
+                                       {
+                                          variant: "secondary",
+                                       }
+                                    )}`}
+                                 >
+                                    Login
+                                 </Link>
+                                 <Link
+                                    rel="noreferrer noopener"
+                                    href="/register"
+                                    className={`border ${buttonVariants({
+                                       variant: "default",
+                                    })}`}
+                                 >
+                                    Register
+                                 </Link>
+                              </>
+                           )}
                         </nav>
                      </SheetContent>
                   </Sheet>
@@ -136,24 +161,33 @@ export const Navbar = () => {
                </nav>
 
                <div className="hidden md:flex gap-2">
-                  <Link
-                     rel="noreferrer noopener"
-                     href="/login"
-                     className={`border ${buttonVariants({
-                        variant: "secondary",
-                     })}`}
-                  >
-                     Login
-                  </Link>
-                  <Link
-                     rel="noreferrer noopener"
-                     href="/register"
-                     className={`border ${buttonVariants({
-                        variant: "default",
-                     })}`}
-                  >
-                     Register
-                  </Link>
+                  {isAuth ? (
+                     <>
+                        <Checkout />
+                        <Profile />
+                     </>
+                  ) : (
+                     <>
+                        <Link
+                           rel="noreferrer noopener"
+                           href="/login"
+                           className={`border ${buttonVariants({
+                              variant: "secondary",
+                           })}`}
+                        >
+                           Login
+                        </Link>
+                        <Link
+                           rel="noreferrer noopener"
+                           href="/register"
+                           className={`border ${buttonVariants({
+                              variant: "default",
+                           })}`}
+                        >
+                           Register
+                        </Link>
+                     </>
+                  )}
 
                   {/* <ModeToggle /> */}
                </div>

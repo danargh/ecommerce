@@ -11,12 +11,15 @@ import {
    SheetTitle,
    SheetTrigger,
 } from "@/components/ui/sheet";
+import { ShoppingBasket } from "lucide-react";
 
 export function Checkout() {
    return (
       <Sheet>
          <SheetTrigger asChild>
-            <Button variant="outline">Checkout</Button>
+            <Button variant="outline" className="border-0  shadow-none">
+               <ShoppingBasket size={48} />
+            </Button>
          </SheetTrigger>
          <SheetContent>
             <SheetHeader>

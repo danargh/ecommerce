@@ -9,29 +9,27 @@ import {
    CardHeader,
    CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-   Select,
-   SelectContent,
-   SelectItem,
-   SelectTrigger,
-   SelectValue,
-} from "@/components/ui/select";
 import Image from "next/image";
 import { Checkout } from "./Checkout";
+import { ProductResponse } from "../interfaces/index";
 
-export function ProductCard() {
+interface Props {
+   item: ProductResponse;
+}
+
+export function ProductCard({ item }: Props) {
    return (
-      <Card className="max-w-[350px]">
+      <Card className="w-full">
          <CardHeader>
-            <CardTitle>Create project</CardTitle>
-            <CardDescription>
-               Deploy your new project in one-click.
-            </CardDescription>
+            <CardTitle>{item.name}</CardTitle>
+            <CardDescription>{item.description}</CardDescription>
          </CardHeader>
          <CardContent>
             <img src="https://asset-a.grid.id/crop/0x0:0x0/700x465/photo/nationalgeographic/201101101438380_b.jpg" />
+            <p>{item.categoryId.name}</p>
+            <p>{item.price}</p>
+            <p>{item.stock}</p>
+            <p>{item.createdById.name}</p>
          </CardContent>
          <CardFooter className="flex justify-between">
             <Button variant="outline">Cancel</Button>
