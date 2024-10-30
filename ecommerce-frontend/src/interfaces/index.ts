@@ -1,3 +1,4 @@
+import { OrderStatus, User, Product } from "@prisma/client";
 // response
 export interface Response<T> {
    status?: string;
@@ -76,6 +77,12 @@ export interface CategoryResponse {
    name: string;
    description: string;
 }
+// categori
+export interface Category {
+   id: number;
+   name: string;
+   description: string;
+}
 
 // Product response
 export interface ProductResponse {
@@ -87,5 +94,50 @@ export interface ProductResponse {
    createdAt: Date;
    updatedAt: Date;
    createdById: User; // Relasi dengan User Entity
-   categoryId: CategoryResponse; // Relasi dengan Category Entity (nullable)
+   categoryId: Category; // Relasi dengan Category Entity (nullable)
+}
+
+// Product
+export interface Product {
+   id: number;
+   name: string;
+   description: string;
+   price: number;
+   stock: number;
+   createdAt: Date;
+   updatedAt: Date;
+   createdById: User; // Relasi dengan User Entity
+   categoryId: Category; // Relasi dengan Category Entity (nullable)
+}
+// Product
+export interface ProductRequest {
+   name: string;
+   description: string;
+   price: number;
+   stock: number;
+   createdById: number; // Relasi dengan User Entity
+   categoryId: number; // Relasi dengan Category Entity (nullable)
+}
+
+// order
+export interface OrderResponse {
+   id: number;
+   quantity: number;
+   totalPrice: number;
+   status: OrderStatus;
+   createdAt: Date;
+   updateAt: Date;
+   userId: User;
+   productId: Product;
+}
+// order
+export interface Order {
+   id: number;
+   quantity: number;
+   totalPrice: number;
+   status: OrderStatus;
+   createdAt: Date;
+   updateAt: Date;
+   userId: User;
+   productId: Product;
 }

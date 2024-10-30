@@ -15,6 +15,7 @@ import {
 import { useRouter } from "next/navigation";
 import { UserSlice, useUIStateSlice, useUserSlice } from "@/global/store";
 import { useStore } from "zustand";
+import DialogProfile from "./DialogProfile";
 
 export function Profile() {
    const user = useUserSlice((state) => state.user);
@@ -23,11 +24,11 @@ export function Profile() {
    const cookies = new Cookies();
 
    const logout = () => {
-      cookies.remove("token");
       window.localStorage.clear();
-      setIsAuth(false);
-
+      cookies.remove("token");
       router.push("/login");
+
+      // setIsAuth(false);
    };
 
    return (
@@ -52,7 +53,7 @@ export function Profile() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-               <DropdownMenuItem>Profile</DropdownMenuItem>
+               <DialogProfile />
                <DropdownMenuItem>Settings</DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

@@ -1,28 +1,13 @@
-import Image from "next/image";
-
-import { columns } from "@/components/table/column";
-import { DataTable } from "@/components/table/data-table";
-import { DashboardTableOrders } from "@/components/DashboardTableOrders";
+import { getAllOrders } from "@/actions/order";
+import { DashboardTableOrder } from "@/components/DashboardTableOrder";
 // import { taskSchema } from "./data/schema";
 
-const tasks = [
-   {
-      id: "TASK-8782",
-      title: "You can't compress the program without quantifying the open-source SSD pixel!",
-      status: "in progress",
-      label: "documentation",
-      priority: "medium",
-   },
-   {
-      id: "TASK-8782",
-      title: "You can't compress the program without quantifying the open-source SSD pixel!",
-      status: "in progress",
-      label: "documentation",
-      priority: "medium",
-   },
-];
-
 export default async function OrdersPage() {
+   const { success, data, error } = await getAllOrders({
+      success: false,
+      error: false,
+   });
+
    return (
       <>
          <div className="h-full flex-1 flex-col space-y-8 p-8 md:flex">
@@ -31,7 +16,8 @@ export default async function OrdersPage() {
                   <h2 className="text-2xl font-bold tracking-tight">Pesanan</h2>
                </div>
             </div>
-            <DashboardTableOrders />
+            {/* <DataTable data={tasks} columns={columns} /> */}
+            <DashboardTableOrder orderData={data} />
          </div>
       </>
    );

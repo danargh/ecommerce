@@ -1,14 +1,37 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation"; // Import usePathname
+import { usePathname, useRouter } from "next/navigation"; // Import usePathname
 import { cn } from "@/lib/utils";
+import { useValidateToken } from "@/api/auth";
+import { useEffect } from "react";
 
 export function DashboardNavbar({
    className,
    ...props
 }: React.HTMLAttributes<HTMLElement>) {
+   const {
+      data: successResponseValidate,
+      status: useValidateStatus,
+      error: errorReponseValidate,
+   } = useValidateToken();
+   const router = useRouter();
+
+   useEffect(() => {
+      if (useValidateStatus === "error") {
+         router.push("/login");
+      }
+   }, [router, useValidateStatus]);
+
    const pathname = usePathname(); // Get the current path
+
+   // if (useValidateStatus === "pending") {
+   //    return (
+   //       <div className="absolute bg-white w-screen h-screen flex justify-center items-center">
+   //          <h1 className="text-4xl">LOADING...</h1>
+   //       </div>
+   //    );
+   // }
 
    return (
       <nav

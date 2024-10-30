@@ -2,7 +2,8 @@ import Image from "next/image";
 
 import { columns } from "@/components/table/column";
 import { DataTable } from "@/components/table/data-table";
-import { DashboardTableCustomers } from "@/components/ui/DashboardTableCustomers";
+import { DashboardTableCustomers } from "@/components/DashboardTableCustomers";
+import { getAllUsers } from "@/actions/user";
 // import { taskSchema } from "./data/schema";
 
 const tasks = [
@@ -23,6 +24,10 @@ const tasks = [
 ];
 
 export default async function CustomersPage() {
+   const { success, data, error } = await getAllUsers({
+      success: false,
+      error: false,
+   });
    return (
       <>
          <div className="h-full flex-1 flex-col space-y-8 p-8 md:flex">
@@ -33,7 +38,7 @@ export default async function CustomersPage() {
                   </h2>
                </div>
             </div>
-            <DashboardTableCustomers />
+            <DashboardTableCustomers userData={data} />
          </div>
       </>
    );

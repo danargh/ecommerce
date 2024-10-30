@@ -3,6 +3,8 @@ import Image from "next/image";
 import { columns } from "@/components/table/column";
 import { DataTable } from "@/components/table/data-table";
 import { DashboardProductsForm } from "@/components/DashboardProductForm";
+import { DashboardTableProduct } from "@/components/DashboardTableProduct";
+import { getAllProducts } from "@/actions/product";
 // import { taskSchema } from "./data/schema";
 
 const tasks = [
@@ -23,6 +25,10 @@ const tasks = [
 ];
 
 export default async function ProductsPage() {
+   const { success, data, error } = await getAllProducts({
+      success: false,
+      error: false,
+   });
    return (
       <>
          <div className="h-full flex-1 flex-col space-y-8 p-8 md:flex">
@@ -31,8 +37,8 @@ export default async function ProductsPage() {
                   <h2 className="text-2xl font-bold tracking-tight">Produk</h2>
                </div>
             </div>
-            <DashboardProductsForm />
-            <DataTable data={tasks} columns={columns} />
+
+            <DashboardTableProduct productData={data} />
          </div>
       </>
    );

@@ -50,7 +50,7 @@ export default async function Dashboard() {
                <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                      <CardTitle className="text-sm font-medium">
-                        Subscriptions
+                        Total Customers
                      </CardTitle>
                      <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -127,15 +127,15 @@ export default async function Dashboard() {
                </Card>
             </div>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-               <Card className="col-span-4">
+               {/* <Card className="col-span-4">
                   <CardHeader>
                      <CardTitle>Overview</CardTitle>
                   </CardHeader>
                   <CardContent className="pl-2">
-                     {/* <Overview /> */}
+    
                   </CardContent>
-               </Card>
-               <Card className="lg:col-span-3 col-span-4">
+               </Card> */}
+               {/* <Card className="lg:col-span-3 col-span-4">
                   <CardHeader>
                      <CardTitle>Recent Sales</CardTitle>
                      <CardDescription>
@@ -145,7 +145,7 @@ export default async function Dashboard() {
                   <CardContent>
                      <DashboardSalesTable />
                   </CardContent>
-               </Card>
+               </Card> */}
             </div>
          </div>
       </>

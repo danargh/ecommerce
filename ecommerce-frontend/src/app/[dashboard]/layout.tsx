@@ -16,10 +16,10 @@ export default async function RootLayout({
 }: {
    children: React.ReactNode;
 }) {
-   // const { success } = await validateToken({
-   //    success: false,
-   //    error: false,
-   // });
+   const { success } = await validateToken({
+      success: false,
+      error: false,
+   });
    // if (!success === true) {
    //    redirect("/login");
    // }

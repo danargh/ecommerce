@@ -23,6 +23,7 @@ import { useLogin, useValidateToken } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import { LogoIcon } from "@/assets/icons";
 import { useUserSlice } from "@/global/store";
+import Cookies from "universal-cookie";
 
 export default function page() {
    const setUser = useUserSlice((state) => state.setUser);
@@ -42,6 +43,7 @@ export default function page() {
    const router = useRouter();
 
    useEffect(() => {
+      const cookies = new Cookies();
       if (useLoginStatus === "success") {
          if (successResponse.data.role === "ADMIN") {
             router.push("/dashboard");
@@ -49,14 +51,20 @@ export default function page() {
             router.push("/");
          }
       }
-      if (useValidateStatus === "success") {
+      if (useValidateStatus === "success" && cookies.get("token")) {
          if (successResponseValidate.data.role === "ADMIN") {
             router.push("/dashboard");
          } else {
             router.push("/");
          }
       }
-   }, [router, useLoginStatus, useValidateStatus]);
+   }, [
+      router,
+      useLoginStatus,
+      useValidateStatus,
+      successResponse?.data.role,
+      successResponseValidate?.data.role,
+   ]);
 
    const form = useForm<z.infer<typeof LoginSchema>>({
       resolver: zodResolver(LoginSchema),

@@ -33,10 +33,10 @@ export const ProductSchema = z.object({
          message: "Name must not be longer than 30 characters.",
       }),
    description: z.string().min(2),
-   price: z.number().min(1),
-   stock: z.number(),
-   createdById: z.number(),
-   categoryId: z.number(),
+   price: z.coerce.number().min(1),
+   stock: z.coerce.number(),
+   createdById: z.coerce.number(),
+   categoryId: z.coerce.number(),
 });
 
 export const taskSchema = z.object({

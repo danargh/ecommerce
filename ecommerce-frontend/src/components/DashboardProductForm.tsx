@@ -39,6 +39,19 @@ import {
    SelectValue,
 } from "./ui/select";
 import Link from "next/link";
+import { useCreateProduct } from "@/api/product";
+import { UseMutateAsyncFunction } from "@tanstack/react-query";
+import {
+   Category,
+   Product,
+   ProductRequest,
+   ProductResponse,
+   Response,
+} from "@/interfaces";
+import { AxiosError } from "axios";
+import { useEffect, useState } from "react";
+import { getAllCategories } from "@/actions/category";
+import { useUserSlice } from "@/global/store";
 
 const category = [
    { label: "English", value: "en" },
@@ -52,36 +65,95 @@ const category = [
    { label: "Chinese", value: "zh" },
 ] as const;
 
-type AccountFormValues = z.infer<typeof ProductSchema>;
+interface Props {
+   onMutateCreateProduct: UseMutateAsyncFunction<
+      Response<ProductResponse>,
+      AxiosError<unknown, unknown>,
+      ProductRequest,
+      unknown
+   >;
+   data?: Response<ProductResponse>;
+   setTableData: React.Dispatch<React.SetStateAction<Product[]>>;
+   editData: Product | undefined;
+}
 
-// This can come from your database or API.
-const defaultValues: Partial<AccountFormValues> = {
-   // name: "Your name",
-   // dob: new Date("2023-01-23"),
-};
+export function DashboardProductsForm({
+   data,
+   setTableData,
+   editData,
+   onMutateCreateProduct,
+}: Props) {
+   const {
+      status: createProductStatus,
+      data: removedProductData,
+      mutateAsync: mutateCreateProduct,
+   } = useCreateProduct();
+   const [categories, setCategories] = useState<Category[]>();
+   const user = useUserSlice((state) => state.user);
 
-export function DashboardProductsForm() {
-   const form = useForm<AccountFormValues>({
+   const form = useForm<z.infer<typeof ProductSchema>>({
       resolver: zodResolver(ProductSchema),
-      defaultValues,
+      defaultValues: {
+         name: editData?.name || "",
+         description: editData?.description || "",
+         price: editData?.price || 0,
+         stock: editData?.stock || 0,
+         createdById: user?.id,
+         categoryId: editData?.categoryId.id || 0,
+      },
    });
 
-   function onSubmit(data: AccountFormValues) {
-      toast({
-         title: "You submitted the following values:",
-         description: (
-            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-               <code className="text-white">
-                  {JSON.stringify(data, null, 2)}
-               </code>
-            </pre>
-         ),
+   useEffect(() => {
+      const getCategories = async () => {
+         const { success, data, error } = await getAllCategories({
+            success: false,
+            error: false,
+         });
+         setCategories(data);
+      };
+      if (user?.id) {
+         form.setValue("createdById", user.id);
+      }
+      if (editData) {
+         console.log("dibawah", editData);
+         form.reset({
+            name: editData?.name || "",
+            description: editData?.description || "",
+            price: editData?.price || 0,
+            stock: editData?.stock || 0,
+            createdById: user?.id,
+            categoryId: editData?.categoryId.id || 0,
+         });
+      }
+
+      getCategories();
+   }, [form, user?.id, editData]);
+
+   function onSubmit(data: z.infer<typeof ProductSchema>) {
+      console.log(data);
+      mutateCreateProduct(data, {
+         onSuccess: (newProduct) => {
+            setTableData((prev) => [...prev, newProduct]);
+            window.location.reload();
+         },
       });
    }
 
    return (
       <Form {...form}>
          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+               control={form.control}
+               name="createdById"
+               render={({ field }) => (
+                  <FormItem className="hidden">
+                     <FormControl>
+                        <Input readOnly={true} type="number" {...field} />
+                     </FormControl>
+                     <FormMessage />
+                  </FormItem>
+               )}
+            />
             <FormField
                control={form.control}
                name="name"
@@ -159,26 +231,29 @@ export function DashboardProductsForm() {
                      >
                         <FormControl>
                            <SelectTrigger>
-                              <SelectValue placeholder="Select a verified email to display" />
+                              <SelectValue placeholder="Select category" />
                            </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                           <SelectItem value="m@example.com">
-                              m@example.com
-                           </SelectItem>
-                           <SelectItem value="m@google.com">
-                              m@google.com
-                           </SelectItem>
-                           <SelectItem value="m@support.com">
-                              m@support.com
-                           </SelectItem>
+                           {categories?.map((data) => {
+                              return (
+                                 <SelectItem
+                                    key={data.id}
+                                    value={String(data.id)}
+                                 >
+                                    {data.name}
+                                 </SelectItem>
+                              );
+                           })}
                         </SelectContent>
                      </Select>
                      <FormMessage />
                   </FormItem>
                )}
             />
-            <Button type="submit">Tambah Produk</Button>
+            <Button type="submit">
+               {editData ? "Edit Produk" : "Tambah Produk"}
+            </Button>
          </form>
       </Form>
    );
