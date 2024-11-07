@@ -255,10 +255,13 @@ export function DashboardTableOrder({ orderData }: Props) {
                <Input
                   placeholder="Filter name..."
                   value={
-                     (table.getColumn("name")?.getFilterValue() as string) ?? ""
+                     (table.getColumn("userId")?.getFilterValue() as string) ??
+                     ""
                   }
                   onChange={(event) =>
-                     table.getColumn("name")?.setFilterValue(event.target.value)
+                     table
+                        .getColumn("userId")
+                        ?.setFilterValue(event.target.value)
                   }
                   className="max-w-sm"
                />

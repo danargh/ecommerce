@@ -44,13 +44,7 @@ export default function page() {
 
    useEffect(() => {
       const cookies = new Cookies();
-      if (useLoginStatus === "success") {
-         if (successResponse.data.role === "ADMIN") {
-            router.push("/dashboard");
-         } else {
-            router.push("/");
-         }
-      }
+
       if (useValidateStatus === "success" && cookies.get("token")) {
          if (successResponseValidate.data.role === "ADMIN") {
             router.push("/dashboard");
@@ -86,6 +80,12 @@ export default function page() {
                   name: data.data.name,
                   id: data.data.id,
                });
+
+               if (data.data.role === "ADMIN") {
+                  router.push("/dashboard");
+               } else {
+                  router.push("/");
+               }
             },
          });
       });

@@ -57,7 +57,7 @@ export const Navbar = ({ isAuthenticated }: Props) => {
 
    useEffect(() => {
       setIsAuth(isAuthenticated);
-   }, [setIsAuth]);
+   }, [setIsAuth, isAuthenticated]);
 
    console.log(isAuthenticated);
 

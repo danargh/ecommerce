@@ -6,12 +6,7 @@ import { DashboardNavbar } from "@/components/DashboardNavbar";
 import { validateToken } from "@/actions/auth";
 import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-   title: "The Founders Wedding Invitation",
-   description: "Platform Undangan Nomor 1 di Indonesia",
-};
-
-export default async function RootLayout({
+export default async function DashboardLayout({
    children,
 }: {
    children: React.ReactNode;
@@ -24,7 +19,7 @@ export default async function RootLayout({
    //    redirect("/login");
    // }
    return (
-      <main className="flex-col md:flex">
+      <section className="flex-col md:flex">
          <div className="border-b">
             <div className="flex h-16 items-center px-4">
                {/* <TeamSwitcher /> */}
@@ -37,6 +32,6 @@ export default async function RootLayout({
          </div>
 
          {children}
-      </main>
+      </section>
    );
 }
